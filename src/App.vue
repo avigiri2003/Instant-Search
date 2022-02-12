@@ -1,11 +1,18 @@
 <template>
   <div id="app">
     <h1>Instant Search</h1>
+    <div class="magic" v-html="magic"></div>
     <form id="main">
       <div class="bar">
-        <input type="text" placeholder="Enter some filter criteria..." v-model="filter">
+        <input type="text" placeholder="Enter some filter criteria..." v-model="filter" 
+          @keyup.down="test('down', filteredTopics)"
+          @keyup.up="test('up', filteredTopics)"
+          @keypress="newtest($event)">
         <ul>
           <li v-for="(topic, index) in filteredTopics" :key="index"
+            :class="[
+              index == currentIndex ? 'test' : ''
+              ]"
           >
           <span v-html="topic" />
           </li>
@@ -33,7 +40,27 @@ export default {
         "The object syntax for v-bind:style is pretty straightforward - it looks almost like CSS, except it’s a JavaScript object",
         "Vue.js uses an HTML-based template syntax that allows you to declaratively bind the rendered DOM to the underlying Vue instance’s data"
       ],
-      filter: ""
+      filter: "",
+      currentTopic: "",
+      currentIndex: 0,
+      magic: "test <b>mag</b>ic"
+    }
+  },
+  methods:{
+    newtest(e){
+      console.log(">>>>", e.keyCode);
+    },
+    test(key, filteredTopics){
+console.log(">>> test", filteredTopics, this.currentIndex);
+if(key == "down")
+  {
+    this.currentIndex++;
+  }
+else
+  {
+    this.currentIndex--;
+  }
+//this.currentIndex = (key == "down") ? this.currentIndex++ : this.currentIndex--;
     }
   },
   computed: {
@@ -55,6 +82,7 @@ export default {
           j++;
         }
       }    
+      //this.currentTopic = temp_array[0];
       return temp_array;
     }
   }
@@ -62,6 +90,10 @@ export default {
 </script>
 
 <style>
+.test{
+  background-color: red !important;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -112,5 +144,9 @@ ul li{
 }
 .highlightText{
   background: yellow;
+}
+
+.magic b {
+  color: #262626;
 }
 </style>
